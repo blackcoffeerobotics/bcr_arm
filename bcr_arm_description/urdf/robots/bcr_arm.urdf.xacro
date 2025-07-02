@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bcr_arm">
+
+  <!-- Arguments -->
+  <xacro:arg name="use_gazebo" default="true"/>
+  <xacro:arg name="ros2_controllers_path" default="bcr_arm_moveit_config/config/bcr_arm/ros2_controllers.yaml"/>
+  <xacro:arg name="use_camera" default="true"/>
+  <xacro:arg name="prefix" default=""/>
+
+  <!-- Material definitions for RViz -->
+  <material name="black">
+    <color rgba="0.165 0.165 0.165 1.0"/>
+  </material>
+  <material name="dark_grey">
+    <color rgba="0.376 0.376 0.376 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.565 0.565 0.565 1.0"/>
+  </material>
+
+  <!-- Connect to world frame -->
+  <link name="world"/>
+  <joint name="world_to_base" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Mechanical Arm -->
+  <xacro:include filename="$(find bcr_arm_description)/urdf/mech/bcr_arm_mech.urdf.xacro"/>
+  <xacro:bcr_arm_kinematics/>
+
+  <!-- Sensors -->
+  <xacro:if value="$(arg use_camera)">
+    <xacro:include filename="$(find bcr_arm_description)/urdf/sensors/depth_camera.urdf.xacro"/>
+    <xacro:depth_camera prefix="$(arg prefix)" parent_link="flange"/>
+  </xacro:if>
+
+  <!-- ROS2 Control -->
+  <xacro:if value="$(arg use_gazebo)">
+    <xacro:include filename="$(find bcr_arm_description)/urdf/control/gazebo_sim_ros2_control.urdf.xacro"/>
+    <xacro:load_gazebo_sim_ros2_control_plugin robot_name="bcr_arm" ros2_controllers_path="$(arg ros2_controllers_path)" use_gazebo="$(arg use_gazebo)"/>
+    <xacro:include filename="$(find bcr_arm_description)/urdf/control/ros2_control.urdf.xacro" />
+    <xacro:ros2_control_interfaces/>
+  </xacro:if>
+</robot>

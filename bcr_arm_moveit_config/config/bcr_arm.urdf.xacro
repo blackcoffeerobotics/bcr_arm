@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bcr_arm">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+    <xacro:arg name="ros2_control_hardware_type" default="mock_components" />
+
+    <!-- Import bcr_arm urdf file with Gazebo disabled for MoveIt demo -->
+    <xacro:include filename="$(find bcr_arm_description)/urdf/mech/bcr_arm_mech.urdf.xacro" />
+    
+    <!-- Material definitions for RViz -->
+    <material name="black">
+        <color rgba="0.165 0.165 0.165 1.0"/>
+    </material>
+    <material name="dark_grey">
+        <color rgba="0.376 0.376 0.376 1.0"/>
+    </material>
+    <material name="grey">
+        <color rgba="0.565 0.565 0.565 1.0"/>
+    </material>
+
+    <!-- Connect to world frame -->
+    <link name="world"/>
+    <joint name="world_to_base" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- BCR Arm Mechanical Structure -->
+    <xacro:bcr_arm_kinematics/>
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="bcr_arm.ros2_control.xacro" />
+
+    <xacro:bcr_arm_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)" ros2_control_hardware_type="$(arg ros2_control_hardware_type)"/>
+
+</robot>

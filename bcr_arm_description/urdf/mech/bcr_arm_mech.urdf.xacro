@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<!-- Import Python's math module for use in expressions -->
+<?python import math ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="l1_len" value="0.200" />
+  <xacro:property name="l2_offset" value="0.065" />
+  <xacro:property name="l3_len" value="0.410" />
+  <xacro:property name="l4_offset" value="-0.065" />
+  <xacro:property name="l5_len" value="0.310" />
+  <xacro:property name="l6_offset" value="0.060" />
+  <xacro:property name="l7_len" value="0.105" />
+
+  <!-- RViz Material Definitions -->
+  <material name="color_black">
+    <color rgba="0.165 0.165 0.165 1"/>
+  </material>
+  <material name="color_dark_grey">
+    <color rgba="0.376 0.376 0.376 1"/>
+  </material>
+  <material name="color_grey">
+    <color rgba="0.565 0.565 0.565 1"/>
+  </material>
+  <material name="color_light_grey">
+    <color rgba="0.690 0.690 0.690 1"/>
+  </material>
+  <material name="color_white">
+    <color rgba="0.961 0.961 0.961 1"/>
+  </material>
+
+  <xacro:macro name="bcr_arm_kinematics">
+    
+    <!-- Ignition Gazebo Material Definitions -->
+    <gazebo reference="base_link">
+      <material>
+        <ambient>0.165 0.165 0.165 1</ambient>
+        <diffuse>0.165 0.165 0.165 1</diffuse>
+        <specular>0.1 0.1 0.1 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link1">
+      <material>
+        <ambient>0.565 0.565 0.565 1</ambient>
+        <diffuse>0.565 0.565 0.565 1</diffuse>
+        <specular>0.2 0.2 0.2 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link2">
+      <material>
+        <ambient>0.961 0.961 0.961 1</ambient>
+        <diffuse>0.961 0.961 0.961 1</diffuse>
+        <specular>0.3 0.3 0.3 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link3">
+      <material>
+        <ambient>0.565 0.565 0.565 1</ambient>
+        <diffuse>0.565 0.565 0.565 1</diffuse>
+        <specular>0.2 0.2 0.2 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link4">
+      <material>
+        <ambient>0.961 0.961 0.961 1</ambient>
+        <diffuse>0.961 0.961 0.961 1</diffuse>
+        <specular>0.3 0.3 0.3 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link5">
+      <material>
+        <ambient>0.565 0.565 0.565 1</ambient>
+        <diffuse>0.565 0.565 0.565 1</diffuse>
+        <specular>0.2 0.2 0.2 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="link6">
+      <material>
+        <ambient>0.961 0.961 0.961 1</ambient>
+        <diffuse>0.961 0.961 0.961 1</diffuse>
+        <specular>0.3 0.3 0.3 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+    
+    <gazebo reference="flange">
+      <material>
+        <ambient>0.376 0.376 0.376 1</ambient>
+        <diffuse>0.376 0.376 0.376 1</diffuse>
+        <specular>0.15 0.15 0.15 1</specular>
+        <emissive>0 0 0 0</emissive>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+    </gazebo>
+
+    <!-- Kinematic Chain -->
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/base_joint.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.050" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.070" length="0.050"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="2.0"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint1" type="revolute">
+      <parent link="base_link"/>
+      <child link="link1"/>
+      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-6.28" upper="6.28" effort="100" velocity="2"/>
+    </joint>
+    <link name="link1">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_shaft_j1.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/link_l1.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 ${l1_len}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j2.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${l1_len/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.030" length="${l1_len*0.9}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.5"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint2" type="revolute">
+      <parent link="link1"/>
+      <child link="link2"/>
+      <origin xyz="0 0 ${l1_len}" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-2.0" upper="2.0" effort="100" velocity="2"/>
+    </joint>
+    <link name="link2">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_output_j2.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="${l2_offset} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j3.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${l2_offset/2} 0 0" rpy="0 ${pi/2} 0"/>
+        <geometry>
+          <cylinder radius="0.030" length="${math.fabs(l2_offset)*1.5}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.5"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint3" type="revolute">
+      <parent link="link2"/>
+      <child link="link3"/>
+      <origin xyz="${l2_offset} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-6.28" upper="6.28" effort="100" velocity="2"/>
+    </joint>
+    <link name="link3">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_shaft_j3.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/link_l2.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 ${l3_len}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j4.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${l3_len/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.030" length="${l3_len*0.95}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.2"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint4" type="revolute">
+      <parent link="link3"/>
+      <child link="link4"/>
+      <origin xyz="0 0 ${l3_len}" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-2.0" upper="2.0" effort="80" velocity="2"/>
+    </joint>
+    <link name="link4">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_output_j4.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="${l4_offset} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j5.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${l4_offset/2} 0 0" rpy="0 ${pi/2} 0"/>
+        <geometry>
+          <cylinder radius="0.030" length="${math.fabs(l4_offset)*1.5}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.0"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint5" type="revolute">
+      <parent link="link4"/>
+      <child link="link5"/>
+      <origin xyz="${l4_offset} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-6.28" upper="6.28" effort="50" velocity="3"/>
+    </joint>
+    <link name="link5">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_shaft_j5.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/link_l3.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 ${l5_len}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j6.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${l5_len/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.025" length="${l5_len*0.95}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.8"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint6" type="revolute">
+      <parent link="link5"/>
+      <child link="link6"/>
+      <origin xyz="0 0 ${l5_len}" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-2.0" upper="2.0" effort="50" velocity="3"/>
+    </joint>
+    <link name="link6">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_output_j6.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="${l6_offset} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_housing_j7.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${l6_offset/2} 0 0" rpy="0 ${pi/2} 0"/>
+        <geometry>
+          <cylinder radius="0.030" length="${math.fabs(l6_offset)*1.5}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.5"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="joint7" type="revolute">
+      <parent link="link6"/>
+      <child link="flange"/>
+      <origin xyz="${l6_offset} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-6.28" upper="6.28" effort="30" velocity="4"/>
+    </joint>
+    <link name="flange">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/joint_shaft_j7.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/link_l4.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 ${l7_len}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://bcr_arm_description/meshes/tool_flange.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${l7_len/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.025" length="${l7_len*0.9}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.3"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+</robot>
