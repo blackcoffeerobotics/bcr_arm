@@ -8,9 +8,9 @@ https://github.com/user-attachments/assets/8400757d-da8a-446a-a5b3-db223acf94b4
 
 This repository contains a Gazebo Fortress simulation for a 7-DOF robotic arm. It includes ROS2 Control integration and MoveIt for motion planning. Currently, the project supports:
 
-1.  [ROS2 Humble + Gazebo Fortress (Ubuntu 22.04)](#humble--fortress-ubuntu-2204)
+1. [ROS2 Humble + Gazebo Fortress (Ubuntu 22.04)](#humble--fortress-ubuntu-2204)
 2. [ROS2 Jazzy + Gazebo Harmonic (Ubuntu 24.04)](#jazzy--harmonic-ubuntu-2404)
-3.  [Nvidia Isaac Sim](#4-isaac-sim--moveit)
+3. [Nvidia Isaac Sim](#nvidia-isaac-sim)
 
 
 This branch contains the code and scripts for running on ROS2 Humble + Ignition Gazebo Fortress.
@@ -56,8 +56,7 @@ Project-specific dependencies can be installed using `rosdep`:
 # From the root directory of your workspace (e.g., ~/bcr_ws)
 rosdep install --from-paths src --ignore-src -r -y
 ```
-
-### Building from Source
+## Building the Project
 
 ```bash
 # From the root of your workspace
@@ -67,6 +66,20 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+## Nvidia Isaac Sim
+
+### Dependencies
+
+Ensure you have Nvidia Isaac Sim installed.
+
+- Download the Isaac Sim SDK from [here](https://developer.nvidia.com/isaac-sim)
+- Install the SDK
+- Launch Isaac Sim (.~/isaacsim/isaac-sim.sh) and load the [bcr_arm usd](isaacsim/bcr_arm_scene.usd)
+
+```bash
+ros2 launch bcr_arm_moveit_config isaac_demo.launch.py
+```
+
 ### Launch Files
 
 #### 1. Gazebo Simulation with ROS2 Control and MoveIt2 Motion Planning
@@ -74,10 +87,6 @@ To launch the Gazebo simulation with ROS2 Control and MoveIt2 for motion plannin
 ```bash
 ros2 launch bcr_arm_gazebo bcr_arm.gazebo_moveit.launch.py
 ```
-This starts:
-*   Gazebo Fortress with the BCR Arm.
-*   ROS2 controllers for the arm.
-*   MoveIt2 for motion planning and visualization in RViz.
 
 #### 2. Gazebo Simulation with ROS2 Control
 
@@ -85,19 +94,11 @@ This is the primary launch file to bring up the full simulation environment.
 ```bash
 ros2 launch bcr_arm_gazebo bcr_arm.gazebo.launch.py
 ```
-This starts:
--   Gazebo Fortress with the BCR Arm.
--   ROS2 *mock* controllers for the arm. Use scripts from `bcr_arm_gazebo` to send commands to the arm.
--   Launch argument: `world_path:=<path_to_world>`
+-  This uses ROS2 *mock controllers* for the arm. Use scripts from `bcr_arm_gazebo` to send commands to the arm.
+-  Supports launch argument: `world_path:=<path_to_world>`
 
-#### 3. MoveIt Demo (Standalone Motion Planning)
 
-To launch MoveIt and RViz for motion planning (typically used with a running simulation or real hardware):
-```bash
-ros2 launch bcr_arm_moveit_config demo.launch.py
-```
-
-#### 4. Isaac Sim + Moveit 
+#### 3. Isaac Sim + Moveit 
 
 To launch Isaac Sim and use Moveit for motion planning and control.
 
