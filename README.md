@@ -51,6 +51,16 @@ sudo apt install -y ros-jazzy-desktop
 sudo apt install -y gz-harmonic
 ```
 
+Build topic_based_ros2_control from source (needed for jazzy):
+
+```bash
+git clone https://github.com/PickNikRobotics/topic_based_ros2_control.git
+cd topic_based_ros2_control
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
+```
+
 Project-specific dependencies can be installed using `rosdep`:
 ```bash
 # From the root directory of your workspace (e.g., ~/bcr_ws)

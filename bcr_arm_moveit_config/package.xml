@@ -39,8 +39,12 @@
   <exec_depend>rviz_common</exec_depend>
   <exec_depend>rviz_default_plugins</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
-  <exec_depend>xacro</exec_depend>
+  
   <exec_depend>topic_based_ros2_control</exec_depend>
+  <!-- This will probably give error as it has to be built from source for non humble / rolling distros:
+    https://github.com/PickNikRobotics/topic_based_ros2_control/blob/main/doc/installation.md 
+    todo: mark as issue and integrate building from source for jazzy
+    -->
 
 
   <export>
