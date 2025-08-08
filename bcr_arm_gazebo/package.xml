@@ -5,6 +5,7 @@
   <version>0.0.0</version>
   <description>gazebo simulation and control scripts for bcr 7-dof robotic arm</description>
   <maintainer email="vimarsh@blackcoffeerobotics.com">vimarsh</maintainer>
+  <maintainer email="mathew@blackcoffeerobotics.com">mathew</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

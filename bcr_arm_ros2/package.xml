@@ -5,6 +5,7 @@
   <version>0.0.0</version>
   <description>TODO: Package description (metapackage)</description>
   <maintainer email="vimarsh@blackcoffeerobotics.com">vimarsh</maintainer>
+  <maintainer email="mathew@blackcoffeerobotics.com">mathew</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
