@@ -4,9 +4,10 @@
   <name>bcr_arm_moveit_config</name>
   <version>0.3.0</version>
   <description>moveit configuration and launch files for motion planning with the bcr arm</description>
-  <maintainer email="vimarsh@blackcoffeerobotics.com">Vimarsh</maintainer>
-  <maintainer email="mathew@blackcoffeerobotics.com">mathew</maintainer>
-
+  <maintainer email="vimarsh@blackcoffeerobotics.com">Vimarsh Shah</maintainer>
+  <maintainer email="mathew@blackcoffeerobotics.com">Mathew Hans</maintainer>
+  <maintainer email="gaurav@blackcoffeerobotics.com">Gaurav Gupta</maintainer>
+  
   <license>Apache-2.0</license>
 
   <url type="website">http://moveit.ros.org/</url>
