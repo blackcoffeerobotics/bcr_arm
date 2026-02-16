@@ -124,6 +124,27 @@ ros2 launch bcr_arm_gazebo bcr_arm.gazebo.launch.py
 -  This uses ROS2 *mock controllers* for the arm. Use scripts from `bcr_arm_gazebo` to send commands to the arm.
 -  Supports launch argument: `world_path:=<path_to_world>`
 
+#### 3. Gazebo Simulation with Web based control 
+
+**Install Rosbridge** (one-time setup):
+```bash
+   sudo apt install ros-humble-rosbridge-suite
+```
+- To launch the Gazebo simulation with Web Control use the following command:
+```bash
+ros2 launch bcr_arm_gazebo bcr_arm.gazebo.launch.py 
+```
+- Then in another terminal use the following command : 
+```bash
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml 
+```
+- Then in another terminal use the following : 
+```bash
+cd ~/path_to_workspace/src/bcr_arm/web_control/
+python3 -m http.server 8000
+```
+**Open browser** to `http://localhost:8000`
+
 
 
 ## Nvidia Isaac Sim
