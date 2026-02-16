@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCR Arm Web Controller</title>
+    <style>
+        /* CSS STYLING */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        /* HEADER STYLES */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        #status {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* SECTIONS */
+        section {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* JOINT CONTROL STYLES */
+        .joint-container {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .joint-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .joint-value {
+            font-family: monospace;
+            font-size: 16px;
+            color: #3498db;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #2980b9;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #2980b9;
+        }
+
+        /* BUTTON STYLES */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #moveBtn {
+            background-color: #2ecc71;
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            flex-grow: 1;
+        }
+
+        #moveBtn:hover {
+            background-color: #27ae60;
+        }
+
+        #homeBtn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #homeBtn:hover {
+            background-color: #2980b9;
+        }
+
+
+        #recordBtn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        #recordBtn:hover {
+            background-color: #c0392b;
+        }
+
+        #playbackBtn {
+            background-color: #9b59b6;
+            color: white;
+        }
+
+        #playbackBtn:hover {
+            background-color: #8e44ad;
+        }
+
+        #clearBtn {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        #clearBtn:hover {
+            background-color: #d35400;
+        }
+
+        /* SPEED CONTROL */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+        }
+
+        #speedSlider {
+            flex-grow: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #speedSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #speedSlider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* RECORDING SECTION */
+        #posesList {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .pose-item {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #f1f2f6;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        #poseCount {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER SECTION -->
+        <header>
+            <h1>BCR Arm Web Controller</h1>
+            <h2>Interactive 7-DOF Manipulation Interface</h2>
+            <div id="status" class="disconnected">⚠️ Disconnected</div>
+        </header>
+
+        <!-- JOINT CONTROL SECTION -->
+        <section>
+            <h3 class="section-title">Joint Control</h3>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j1">Joint 1</label>
+                    <span class="joint-value" id="j1-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j1" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j2">Joint 2</label>
+                    <span class="joint-value" id="j2-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j2" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j3">Joint 3</label>
+                    <span class="joint-value" id="j3-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j3" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j4">Joint 4</label>
+                    <span class="joint-value" id="j4-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j4" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j5">Joint 5</label>
+                    <span class="joint-value" id="j5-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j5" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j6">Joint 6</label>
+                    <span class="joint-value" id="j6-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j6" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+            <div class="joint-container">
+                <div class="joint-label">
+                    <label for="j7">Joint 7</label>
+                    <span class="joint-value" id="j7-val">0.00 rad</span>
+                </div>
+                <input type="range" id="j7" min="-3.14" max="3.14" step="0.01" value="0">
+            </div>
+        </section>
+
+        <!-- CONTROL BUTTONS SECTION -->
+        <section>
+            <h3 class="section-title">Control Actions</h3>
+            <div class="button-group">
+                <button id="moveBtn">Move Arm</button>
+                <button id="homeBtn">Home Position</button>
+            </div>
+            
+            <div class="speed-control">
+                <label for="speedSlider">Motion Speed:</label>
+                <input type="range" id="speedSlider" min="0.5" max="5.0" step="0.5" value="2.0">
+                <span id="speedVal">2.0</span>
+            </div>
+        </section>
+
+        <!-- RECORDING SECTION -->
+        <section>
+            <h3 class="section-title">Motion Recording</h3>
+            <div class="button-group">
+                <button id="recordBtn">Record Pose</button>
+                <button id="playbackBtn">Playback Sequence</button>
+                <button id="clearBtn">Clear Recording</button>
+            </div>
+            <div id="posesList">
+                <div class="pose-item">No poses recorded yet</div>
+            </div>
+            <div id="poseCount">Poses: 0</div>
+        </section>
+    </div>
+
+    <!-- Load dependencies from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/eventemitter2@6.4.9/lib/eventemitter2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/roslib@1.3.0/build/roslib.min.js"></script>
+    
+    <script>
+        // PART 1 - ROS CONNECTION
+        // Create a ROSLIB.Ros object connecting to ws://localhost:9090
+        const ros = new ROSLIB.Ros({
+            url: 'ws://localhost:9090'
+        });
+
+        // Set up event handlers
+        ros.on('connection', function() {
+            console.log('Connected to websocket server.');
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = '✅ Connected';
+            statusElement.className = 'connected'; // This uses the existing CSS class
+            statusElement.style.backgroundColor = '#d4edda';
+        });
+
+        ros.on('error', function(error) {
+            console.error('Error connecting to websocket server:', error);
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = '❌ Connection Error';
+            statusElement.className = ''; // Remove any existing classes
+            statusElement.style.backgroundColor = '#f8d7da';
+        });
+
+        ros.on('close', function() {
+            console.log('Connection to websocket server closed.');
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = '⚠️ Disconnected';
+            statusElement.className = ''; // Remove any existing classes
+            statusElement.style.backgroundColor = '#fff3cd';
+        });
+
+        // PART 2 - SLIDER VALUE UPDATES
+        // Add event listeners to joint sliders
+        for (let i = 1; i <= 7; i++) {
+            const slider = document.getElementById(`j${i}`);
+            const valueDisplay = document.getElementById(`j${i}-val`);
+            
+            // Add input event listener to update value display
+            slider.addEventListener('input', function() {
+                // Format value with 2 decimal places + " rad"
+                valueDisplay.textContent = parseFloat(this.value).toFixed(2) + ' rad';
+            });
+        }
+
+        // Add event listener to speed slider
+        const speedSlider = document.getElementById('speedSlider');
+        const speedVal = document.getElementById('speedVal');
+        
+        speedSlider.addEventListener('input', function() {
+            // Format value with 1 decimal place + " sec"
+            speedVal.textContent = parseFloat(this.value).toFixed(1) + ' sec';
+        });
+
+        // Helper function to get all joint values
+        function getAllJointValues() {
+            const jointValues = [];
+            for (let i = 1; i <= 7; i++) {
+                const slider = document.getElementById(`j${i}`);
+                jointValues.push(parseFloat(slider.value));
+            }
+            return jointValues;
+        }
+
+        // PART 1 - CREATE ROS TOPIC PUBLISHER
+        // Create a ROSLIB.Topic publisher object for joint trajectory control
+        const jointPublisher = new ROSLIB.Topic({
+            ros: ros,
+            name: '/joint_trajectory_controller/joint_trajectory',
+            messageType: 'trajectory_msgs/JointTrajectory'
+        });
+
+        // PART 2 - CREATE moveArm() FUNCTION
+        function moveArm() {
+            // Get all 7 joint values from the sliders
+            const jointValues = getAllJointValues();
+            
+            // Get the speed value from the speed slider
+            const speedValue = parseFloat(document.getElementById('speedSlider').value);
+            
+            // Create a JointTrajectory message
+            // This message structure tells the robot arm where to move and how fast
+            const trajectoryMsg = {
+                // Joint names - these must match the joint names in the robot's URDF
+                joint_names: ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6', 'joint7'],
+                
+                // Points array - contains the target positions and timing information
+                points: [{
+                    // Target positions for each joint (in radians)
+                    positions: jointValues,
+                    
+                    // Velocities - optional, can be left empty to let controller calculate
+                    velocities: [],
+                    
+                    // Accelerations - optional, can be left empty
+                    accelerations: [],
+                    
+                    // Effort - optional, can be left empty
+                    effort: [],
+                    
+                    // Time from start - specifies when this position should be reached
+                    // sec: whole seconds, nanosec: fractional seconds in nanoseconds
+                    time_from_start: {
+                        sec: Math.floor(speedValue),           // Whole seconds
+                        nanosec: Math.floor((speedValue % 1) * 1e9)  // Fractional seconds in nanoseconds
+                    }
+                }]
+            };
+            
+            // Publish the trajectory message to the robot
+            jointPublisher.publish(trajectoryMsg);
+            
+            // Log to console for debugging
+            console.log("Moving arm to:", jointValues);
+            
+            // Show visual feedback by changing button color temporarily
+            const moveBtn = document.getElementById('moveBtn');
+            const originalBg = moveBtn.style.backgroundColor;
+            moveBtn.style.backgroundColor = '#27ae60'; // Darker green
+            
+            // Disable the button temporarily during motion
+            moveBtn.disabled = true;
+            
+            // Calculate total time including extra 0.5 seconds as requested
+            const totalTime = speedValue + 0.5;
+            
+            // Restore original button appearance and re-enable after motion time
+            setTimeout(() => {
+                moveBtn.style.backgroundColor = originalBg;
+                moveBtn.disabled = false;
+            }, totalTime * 1000); // Convert seconds to milliseconds
+        }
+
+        // PART 3 - ATTACH TO BUTTON
+        // Add onclick handler to moveBtn that calls moveArm()
+        document.getElementById('moveBtn').addEventListener('click', moveArm);
+
+        // Create goHome() function
+        function goHome() {
+            // Set all 7 sliders to value 0 and update their displays
+            for (let i = 1; i <= 7; i++) {
+                const slider = document.getElementById(`j${i}`);
+                const valueDisplay = document.getElementById(`j${i}-val`);
+                
+                // Set slider value to 0
+                slider.value = 0;
+                
+                // Update the value display to show "0.00 rad"
+                valueDisplay.textContent = '0.00 rad';
+            }
+            
+            // Automatically call moveArm() to move the robot to home position
+            moveArm();
+            
+            // Log to console
+            console.log("Moving to home position");
+        }
+
+        // Attach goHome function to homeBtn button's onclick event
+        document.getElementById('homeBtn').addEventListener('click', goHome);
+
+        // PART 1 - RECORDING DATA STRUCTURE
+        // Global array to store recorded poses
+        let recordedPoses = [];
+
+        // PART 2 - RECORD FUNCTION
+        function recordPose() {
+            // Get current values from all 7 sliders
+            const jointValues = getAllJointValues();
+            
+            // Get current speed value
+            const currentSpeed = parseFloat(document.getElementById('speedSlider').value);
+            
+            // Create a pose object with timestamp, joints, and speed
+            const pose = {
+                timestamp: Date.now(),
+                joints: jointValues,
+                speed: currentSpeed
+            };
+            
+            // Add to recordedPoses array
+            recordedPoses.push(pose);
+            
+            // Update the posesList display to show all recorded poses
+            const posesList = document.getElementById('posesList');
+            posesList.innerHTML = '';
+            
+            for (let i = 0; i < recordedPoses.length; i++) {
+                const poseItem = document.createElement('div');
+                poseItem.className = 'pose-item';
+                
+                // Format the pose with values rounded to 2 decimals
+                const formattedJoints = recordedPoses[i].joints.map(val => val.toFixed(2)).join(', ');
+                poseItem.textContent = `Pose ${i + 1}: [${formattedJoints}]`;
+                
+                posesList.appendChild(poseItem);
+            }
+            
+            // Update poseCount to show "X poses recorded"
+            const poseCount = document.getElementById('poseCount');
+            poseCount.textContent = `${recordedPoses.length} poses recorded`;
+            
+            // Log to console
+            console.log("Pose recorded");
+            
+            // Show visual feedback (flash the record button briefly)
+            const recordBtn = document.getElementById('recordBtn');
+            const originalBg = recordBtn.style.backgroundColor;
+            recordBtn.style.backgroundColor = '#c0392b'; // Darker red
+            
+            setTimeout(() => {
+                recordBtn.style.backgroundColor = originalBg;
+            }, 200);
+        }
+
+        // Attach to recordBtn button
+        document.getElementById('recordBtn').addEventListener('click', recordPose);
+
+        // PART 3 - PLAYBACK FUNCTION
+        function playbackSequence() {
+            // Check if recordedPoses has any poses
+            if (recordedPoses.length === 0) {
+                alert("No poses recorded to play back!");
+                return;
+            }
+            
+            // Disable all control buttons during playback
+            document.getElementById('moveBtn').disabled = true;
+            document.getElementById('homeBtn').disabled = true;
+            document.getElementById('recordBtn').disabled = true;
+            document.getElementById('playbackBtn').disabled = true;
+            document.getElementById('clearBtn').disabled = true;
+            
+            // Update status to show "Playing pose X/Y"
+            const statusElement = document.getElementById('status');
+            const originalStatus = statusElement.textContent;
+            
+            // Loop through each recorded pose with delays
+            let delay = 0;
+            
+            for (let i = 0; i < recordedPoses.length; i++) {
+                const pose = recordedPoses[i];
+                
+                // Set timeout for this pose
+                setTimeout(() => {
+                    // Log progress
+                    console.log(`Playing pose ${i + 1} of ${recordedPoses.length}`);
+                    
+                    // Update status to show current pose
+                    statusElement.textContent = `Playing pose ${i + 1}/${recordedPoses.length}`;
+                    
+                    // Set sliders to pose values
+                    for (let j = 0; j < 7; j++) {
+                        const slider = document.getElementById(`j${j + 1}`);
+                        const valueDisplay = document.getElementById(`j${j + 1}-val`);
+                        
+                        // Set slider value
+                        slider.value = pose.joints[j];
+                        
+                        // Update the value display
+                        valueDisplay.textContent = parseFloat(pose.joints[j]).toFixed(2) + ' rad';
+                    }
+                    
+                    // Set speed slider to pose speed
+                    const speedSlider = document.getElementById('speedSlider');
+                    const speedVal = document.getElementById('speedVal');
+                    
+                    speedSlider.value = pose.speed;
+                    speedVal.textContent = parseFloat(pose.speed).toFixed(1) + ' sec';
+                    
+                    // Call moveArm() to execute the movement
+                    moveArm();
+                }, delay * 1000); // Convert seconds to milliseconds
+                
+                // Increment delay by the pose's speed plus 0.5 seconds
+                delay += pose.speed + 0.5;
+            }
+            
+            // After all poses are played, re-enable buttons
+            setTimeout(() => {
+                document.getElementById('moveBtn').disabled = false;
+                document.getElementById('homeBtn').disabled = false;
+                document.getElementById('recordBtn').disabled = false;
+                document.getElementById('playbackBtn').disabled = false;
+                document.getElementById('clearBtn').disabled = false;
+                
+                // Restore original status
+                statusElement.textContent = originalStatus;
+                
+                console.log("Playback completed");
+            }, delay * 1000);
+        }
+
+        // Attach to playbackBtn button
+        document.getElementById('playbackBtn').addEventListener('click', playbackSequence);
+
+        // PART 4 - CLEAR FUNCTION
+        function clearRecording() {
+            // Ask for confirmation
+            const confirmed = confirm("Clear all recorded poses?");
+            
+            if (confirmed) {
+                // Empty recordedPoses array
+                recordedPoses = [];
+                
+                // Clear posesList display
+                const posesList = document.getElementById('posesList');
+                posesList.innerHTML = '<div class="pose-item">No poses recorded yet</div>';
+                
+                // Set poseCount to "0 poses recorded"
+                const poseCount = document.getElementById('poseCount');
+                poseCount.textContent = "0 poses recorded";
+                
+                // Log to console
+                console.log("Recording cleared");
+            }
+        }
+
+        // Attach to clearBtn button
+        document.getElementById('clearBtn').addEventListener('click', clearRecording);
+
+        // HELPER FUNCTION
+        // General function to set joint values
+        function setJointValues(values) {
+            // Set all sliders to the provided values
+            for (let i = 0; i < 7; i++) {
+                const slider = document.getElementById(`j${i + 1}`);
+                const valueDisplay = document.getElementById(`j${i + 1}-val`);
+                
+                // Set slider value
+                slider.value = values[i];
+                
+                // Update the value display
+                valueDisplay.textContent = parseFloat(values[i]).toFixed(2) + ' rad';
+            }
+        }
+
+    </script>
+</body>
+</html>
